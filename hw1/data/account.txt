@@ -1,0 +1,7 @@
+tungbt 1
+levn 0
+hungbt 1
+chiennd 1
+ndchien 0
+eduto 1
+colorme 0
