@@ -2,7 +2,7 @@
 
 
 void printEachAccount(account singleAccount){
-	printf("|  %-13s|%-15s|\n",singleAccount.accountName,(singleAccount.isBanned==TRUE)?"  True":"  False");
+	printf("|  %-13s|%-15s|\n",singleAccount.accountName,(singleAccount.isActived==TRUE)?"  True":"  False");
 }
 void printToCheckFile(account accountList[],int lengthOfList){
 	printf("---------------------------------\n");
@@ -14,7 +14,7 @@ void printToCheckFile(account accountList[],int lengthOfList){
 	}
 	printf("---------------------------------\n");
 }
-int getData(char *filePath)
+int getData(char *filePath,account accountList[])
 {
 	// Open a file in read mode
 	FILE *fptr = fopen(filePath, "r");
@@ -22,21 +22,24 @@ int getData(char *filePath)
 	// Print some text if the file does not exist
 	if(fptr == NULL) {
 		printf("Not able to open the file.");
+		return FALSE;
 	}
 	
 	//start read data
-	account accountList[NUMBER_OF_LIST];
+	// account accountList[NUMBER_OF_LIST];
 	int i = 0;
-	int readBoolenIsBanned;
-	while (fscanf (fptr, "%s %d", accountList[i].accountName, &accountList[i].isBanned) != EOF) {
+	int readBoolenIsActived;
+	while (fscanf (fptr, "%s %d", accountList[i].accountName, &accountList[i].isActived) != EOF) {
 		i++;
     }
-	printf("Succesfully get %d account\n",i);
+	// printf("Succesfully get %d account\n",i);
 	
 	//print to check data
-	int lengthOfList =i;
-	printToCheckFile(accountList,lengthOfList);
+	// int lengthOfList =i;
+	// printToCheckFile(accountList,lengthOfList);
 	
 	// Close the file
-	fclose(fptr);return 0;
+	fclose(fptr);
+	
+	return TRUE;
 }
