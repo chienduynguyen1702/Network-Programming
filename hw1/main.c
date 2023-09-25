@@ -1,27 +1,43 @@
 #include <stdio.h>
-#include "lib.h"
+#include <stdbool.h>
+#define TRUE 0
+#define FALSE 1 
+#define NUMBER_OF_LIST 30
+
+// ####################### account - key struct ########################
+typedef struct ACCOUNT
+{
+	char accountName[20];
+	int isBanned;
+} account;
+
+// ####################### import lib ######################
+#include "./lib/import_data_lib.h"
+#include "./lib/logging.h"
+
 // ####################### declare function ############################
 
 int startMenu();
-int getData();
 
 // ####################### MAIN ############################
 
 int main()
 {
-	// getData();
+	// Get data from file
+	int result = getData("account.txt");
+	if (result != 0) {
+        // Handle the error here, if needed
+        return result;
+    }
+
+	// Start menu
 	startMenu();
+
 	return 0;
 }
 
-// ####################### develop function ############################
-int getData()
-{
-	int data;
-	printf("Enter a number: ");
-	scanf("%d", &data);
-	return data;
-}
+// ####################### menu function ############################
+
 int startMenu()
 {
 	int choice;
@@ -33,7 +49,7 @@ int startMenu()
 		printf("|3. Log out        |\n");
 		printf("|4. Exit           |\n");
 		printf("--------------------\n");
-		printf("|Your choice (1-4): ");
+		printf("=> Your choice (1-4): ");
 		scanf("%d", &choice);
 		printf("\n");
 		switch (choice)
