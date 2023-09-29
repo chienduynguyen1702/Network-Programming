@@ -39,9 +39,19 @@ int postMessage(char *input)
 {
 	char str[20];
 	printf("Post message: ");
-	fflush(stdin);
+	// flush input buffer
+	int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+	// fflush(stdin);
+	// get input
     fgets(str,20,stdin);
-	printf("|%s|\n",str);
+	int inputLength = strlen(str);
+	// remove \n at the end of string
+	if (str[inputLength - 1] == '\n')
+	{
+		str[inputLength - 1] = '\0';
+	}
+	// printf("|%s|\n",str);
 	strcpy(input,str);
 	printf("\n");
 	return TRUE;
