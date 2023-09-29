@@ -89,7 +89,12 @@ int startMenu(account accountList[])
 					printf("You have not logged in.\n");
 					statusCode = FALSE;
 					break;
+				}else
+				{
+					printf("Successfully posted!\n");
+					
 				}
+				
 				break;
 			case 3:	
 				if (isLoggedIn == FALSE)
