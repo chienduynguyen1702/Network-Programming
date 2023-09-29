@@ -1,6 +1,6 @@
 void logging(int action,char *input,int message){
 	FILE *fptr;
-	fptr = fopen("log_20205059.txt", "a");
+	fptr = fopen("./data/log_20205059.txt", "a");
 	if (fptr == NULL)
 	{
 		printf("Error!");
