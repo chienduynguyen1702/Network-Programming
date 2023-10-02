@@ -21,7 +21,7 @@ typedef struct ACCOUNT
 
 // ####################### import lib ######################
 #include "./lib/import_data_lib.h"
-#include "./lib/logging.h"
+#include "./lib/logger.h"
 #include "./lib/menu.h"
 // ####################### declare function ############################
 
@@ -119,7 +119,7 @@ int startMenu(account accountList[])
 				break;
 		}
 		printf("\n");
-		logging(choice,input,statusCode);
+		logger(choice,input,statusCode);
 	} while (choice != 4);
 }
 
