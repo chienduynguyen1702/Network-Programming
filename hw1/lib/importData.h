@@ -1,6 +1,6 @@
 #include<stdio.h>
 
-
+// ####################### print-out-to-check Function  ########################
 void printEachAccount(account singleAccount){
 	printf("|  %-13s|%-15s|\n",singleAccount.accountName,(singleAccount.isActived==TRUE)?"  True":"  False");
 }
@@ -14,6 +14,11 @@ void printToCheckFile(account accountList[],int lengthOfList){
 	}
 	printf("---------------------------------\n");
 }
+// ####################### get data from file Function  ########################
+// param 1: filePath: path to file
+// param 2: accountList: array of account as a struct
+// return: status code
+
 int getData(char *filePath,account accountList[])
 {
 	// Open a file in read mode
@@ -32,9 +37,9 @@ int getData(char *filePath,account accountList[])
 	while (fscanf (fptr, "%s %d", accountList[i].accountName, &accountList[i].isActived) != EOF) {
 		i++;
     }
-	// printf("Succesfully get %d account\n",i);
 	
-	//print to check data
+	// printf("Succesfully get %d account\n",i);
+	// print to check data
 	// int lengthOfList =i;
 	// printToCheckFile(accountList,lengthOfList);
 	

@@ -1,3 +1,7 @@
+// ######################## Logging after each action ########################
+// param 1: action: action code
+// param 2: input: input string from user
+// param 3: message: status code of action
 void logger(int action,char *input,int message){
 	FILE *fptr;
 	fptr = fopen("./data/log_20205059.txt", "a");
@@ -7,7 +11,7 @@ void logger(int action,char *input,int message){
 		exit(1);
 	}
     
-    //skip logging when user exit program
+    //skip logging when user exit program, chosing action 4
     if (action == EXIT)
     {
         exit(0);

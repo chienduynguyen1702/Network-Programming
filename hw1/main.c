@@ -3,16 +3,18 @@
 #include <time.h>
 #include <stdlib.h>
 
+// ####################### define ########################
 #define TRUE 1
 #define FALSE 0 
 #define NOT_EXIST -1
 #define NUMBER_OF_LIST 30
 
+// ####################### define menu choice ########################
 #define LOG_IN 1
 #define POST_MESSAGE 2
 #define LOG_OUT 3
 #define EXIT 4
-// ####################### account - key struct ########################
+// ####################### account - activationValue struct ########################
 typedef struct ACCOUNT
 {
 	char accountName[20];
@@ -20,7 +22,7 @@ typedef struct ACCOUNT
 } account;
 
 // ####################### import lib ######################
-#include "./lib/import_data_lib.h"
+#include "./lib/importData.h"
 #include "./lib/logger.h"
 #include "./lib/menu.h"
 // ####################### declare function ############################
@@ -36,6 +38,7 @@ int main()
 	int result = getData("./data/account.txt",accountList);
 	if (result != TRUE) {
         // Handle the error here, if needed
+		printf("Error when get data from file\n");
         return result;
     }
 
@@ -45,9 +48,10 @@ int main()
 	return 0;
 }
 
+// ##################################################################
 // ####################### menu function ############################
-
-
+// ##################################################################
+// param : accountList: array of account as a struct
 
 int startMenu(account accountList[])
 {
@@ -77,6 +81,7 @@ int startMenu(account accountList[])
 					break;
 				}
 				statusCode = logIn(accountList,input);
+				// set isLoggedIn = TRUE if log in successfully
 				if (statusCode == TRUE) {
 					isLoggedIn = TRUE;
 				}
@@ -84,6 +89,8 @@ int startMenu(account accountList[])
 
 			case 2:
 				statusCode = postMessage(input);
+
+				// check if input account has logged in
 				if (isLoggedIn == FALSE) {
 					printf("You have not logged in.\n");
 					statusCode = FALSE;
@@ -96,12 +103,14 @@ int startMenu(account accountList[])
 				break;
 
 			case 3:	
+				// check if input account has logged in
 				if (isLoggedIn == FALSE) {
 					printf("You have not logged in.\n");
 					statusCode = FALSE;
 					break;
 				}
 				else {
+					// set isLoggedIn = FALSE if log out successfully
 					isLoggedIn = FALSE;
 					printf("Successfully logged out\n");
 					strcpy(input,"");
