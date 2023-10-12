@@ -4,7 +4,6 @@ Thumbs.db
 Thumbs.db:encryptable
 ehthumbs.db
 ehthumbs_vista.db
-
 *.zip
 # Dump file
 *.stackdump
@@ -21,7 +20,7 @@ $RECYCLE.BIN/
 *.msix
 *.msm
 *.msp
-
+*.zip
 # Windows shortcuts
 *.lnk
 
