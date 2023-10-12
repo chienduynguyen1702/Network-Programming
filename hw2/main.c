@@ -5,11 +5,13 @@
 #include <arpa/inet.h>
 #include <string.h>
 #include <stdlib.h>
-
+// function domainToIp: convert domain name to ip
+// param : param - input domain name
+// return: 0 if success, 1 if fail
 int domainToIp(char *param) {
     struct hostent *he;
     struct in_addr **addr_list;
-    
+
     // check if input domain is valid
     if ((he = gethostbyname(param)) == NULL) {
         herror ("Not found information");
@@ -24,8 +26,10 @@ int domainToIp(char *param) {
     } 
     return 0;
 }
-
-int ipToDomain(char *param, struct in_addr ip) {
+// function ipToDomain: convert ip to domain name
+// param : ip - input ip
+// return: 0 if success, 1 if fail
+int ipToDomain(struct in_addr ip) {
     struct hostent *hp;
 
     // check if input IP is valid
@@ -57,7 +61,7 @@ int main(int argc, char *argv[]) {
 
     // check if input param is ipv4 or domain name
     if (inet_pton(AF_INET, argv[1], &ip) == 1) {    // if input param is ipv4
-        return ipToDomain(argv[1], ip);
+        return ipToDomain(ip);
     } else {                                        // if input param is domain name
         return domainToIp(argv[1]);
     }
