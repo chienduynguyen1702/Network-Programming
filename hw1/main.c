@@ -57,7 +57,7 @@ int startMenu(account accountList[])
 {
 	int choice;
 	int isLoggedIn = FALSE;
-	char input[20]="";
+	char input;
 	
 	// return status code after each choice in menu
 	int statusCode;
@@ -76,30 +76,11 @@ int startMenu(account accountList[])
 		switch (choice)
 		{
 			case 1:
-				if (isLoggedIn == TRUE) {
-					printf("You have already logged in.\n");
-					break;
-				}
-				statusCode = logIn(accountList,input);
-				// set isLoggedIn = TRUE if log in successfully
-				if (statusCode == TRUE) {
-					isLoggedIn = TRUE;
-				}
+				statusCode = logIn(accountList,&input,&isLoggedIn);
 				break;
 
 			case 2:
-				statusCode = postMessage(input);
-
-				// check if input account has logged in
-				if (isLoggedIn == FALSE) {
-					printf("You have not logged in.\n");
-					statusCode = FALSE;
-					break;
-				}
-				else {
-					printf("Successfully posted!\n");
-					
-				}
+				statusCode = postMessage(&input,&isLoggedIn);
 				break;
 
 			case 3:	
@@ -113,7 +94,7 @@ int startMenu(account accountList[])
 					// set isLoggedIn = FALSE if log out successfully
 					isLoggedIn = FALSE;
 					printf("Successfully logged out\n");
-					strcpy(input,"");
+					// strcpy(input,"");
 				}
 				break;
 
@@ -125,7 +106,7 @@ int startMenu(account accountList[])
 				break;
 		}
 		printf("\n");
-		logger(choice,input,statusCode);
+		logger(choice,&input,statusCode);
 	} while (choice != 4);
 	return 0;
 }
