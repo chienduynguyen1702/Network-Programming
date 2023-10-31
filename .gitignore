@@ -71,7 +71,7 @@ Temporary Items
 
 # Files for the ART/Dalvik VM
 *.dex
-
+.vscode
 # Java class files
 *.class
 

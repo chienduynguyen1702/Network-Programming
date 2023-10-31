@@ -4,6 +4,7 @@
 // param 3: message: status code of action
 // return: TRUE if success, FALSE if fail
 #include <time.h>
+#include <stdio.h>
 // print responses to check
 int printResponses(char *responses[])
 {
