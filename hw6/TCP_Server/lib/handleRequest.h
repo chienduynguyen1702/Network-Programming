@@ -84,6 +84,7 @@ int logIn(char *username, account accountList[], int numberOfAccountList, int se
     {
         for (int i = 0; i < numberOfAccountList; i++)
         {
+            printf("|  %-13s|%-15s|  %-13s|\n",accountList[i].accountName,(accountList[i].isActived==ACTIVED)?"  actived":"  banned",(accountList[i].isOnline==TRUE)?"  online":"  offline");
             if (strcmp(username, accountList[i].accountName) == 0)
             {
                 if (accountList[i].isOnline == TRUE)

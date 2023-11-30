@@ -19,17 +19,17 @@
 
 // ####################### print-out-to-check Function  ########################
 void printEachAccount(account singleAccount){
-	printf("|  %-13s|%-15s|\n",singleAccount.accountName,(singleAccount.isActived==ACTIVED)?"  actived":"  banned");
+	printf("|  %-13s|%-15s|  %-13s|\n",singleAccount.accountName,(singleAccount.isActived==ACTIVED)?"  actived":"  banned",(singleAccount.isOnline==TRUE)?"  online":"  offline");
 }
 void printToCheckFile(account accountList[],int lengthOfList){
-	printf("---------------------------------\n");
-	printf("|%-15s|%-15s|\n","    account  ","  is banned ?");
-	printf("---------------------------------\n");
+	printf("-------------------------------------------------\n");
+	printf("|%-15s|%-15s|%-15s|\n","    account  ","  is banned ?","  is online ?");
+	printf("-------------------------------------------------\n");
 	for ( int i = 0; i < lengthOfList; i++)
 	{
 		printEachAccount(accountList[i]);
 	}
-	printf("---------------------------------\n");
+	printf("-------------------------------------------------\n");
 }
 // ####################### get data from file Function  ########################
 // param 1: filePath: path to file

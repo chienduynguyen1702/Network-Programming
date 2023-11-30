@@ -38,6 +38,7 @@ int main(int argc, char *argv[]) {
     }
     int menu=-1;
     char returnCode[10]={0};
+    char messageLength[4]={0};
     // recv(sock, returnCode, sizeof(int), 0);
     if(read(sock, returnCode, sizeof(returnCode))<0){
         perror("Connection Failed");
@@ -45,7 +46,7 @@ int main(int argc, char *argv[]) {
     }
     if (atoi(returnCode)==100)
     {
-        printf("RESPONSE CODE: %s : Connection success\n",returnCode);
+        outputResponse(100);
     }
     else
     {
@@ -55,6 +56,7 @@ int main(int argc, char *argv[]) {
     int responseCode=0;
     while (menu!=4)
     {
+        memset(buffer,0,strlen(buffer));
         printf("\n============================\n");
         printf("    1. Log In\n");
         printf("    2. Posting\n");
@@ -69,9 +71,16 @@ int main(int argc, char *argv[]) {
                 char username[MAX_INPUT_SIZE];
                 printf("Enter username: ");
                 scanf("%s",username);
+
+                snprintf(messageLength,4,"%ld",strlen(username));
+                // printf("%s",messageLength);
+                send(sock,messageLength,4,0);
+
                 snprintf(buffer, sizeof(buffer)-6, "USER %s", username);
-                send(sock, buffer, strlen(buffer), 0);
-                printf("REQUEST: '%s'\n", buffer);
+                printf("\nREQUEST: '%s'\n", buffer);
+
+                int sentBytes = send(sock, buffer, strlen(buffer), 0);
+                printf("===>%d sent bytes\n",sentBytes);
                 recv(sock, buffer, sizeof(buffer), 0);
                 responseCode=atoi(buffer);
                 break;
@@ -89,22 +98,36 @@ int main(int argc, char *argv[]) {
                 if (length > 0 && post[length - 1] == '\n') {
                     post[length - 1] = '\0';
                 }
+
+                snprintf(messageLength,4,"%ld",strlen(post));
+                // printf("%s",messageLength);
+                send(sock,messageLength,4,0);
+
                 snprintf(buffer, sizeof(buffer)-6, "POST %s", post);
+                printf("\nREQUEST: '%s'\n", buffer);
+
                 send(sock, buffer, strlen(buffer), 0);
-                printf("REQUEST: '%s'\n", buffer);
                 recv(sock, buffer, sizeof(buffer), 0);
                 responseCode=atoi(buffer);
                 break;
             case 3:
+
+                snprintf(messageLength,4,"%d",0);
+                // printf("%s",messageLength);
+                send(sock,messageLength,4,0);
+
                 snprintf(buffer, sizeof(buffer), "BYE");
-                send(sock, buffer, strlen(buffer), 0);
                 printf("REQUEST: '%s'\n", buffer);
+
+                send(sock, buffer, strlen(buffer), 0);
                 recv(sock, buffer, sizeof(buffer), 0);
                 responseCode=atoi(buffer);
                 break;
             default:
                 break;
         }
+        memset(messageLength,0,4);
+        memset(buffer,0,strlen(buffer));
         outputResponse(responseCode);
 
     }

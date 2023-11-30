@@ -3,6 +3,10 @@
 void outputResponse(int responseCode){
     switch (responseCode)
         {
+            case 100:
+                printf("RESPONSE CODE: %d : Connection success\n",responseCode);
+                break;
+
             // Login request
             case 110:
                 printf("RESPONSE CODE: %d : Log in successfully\n",responseCode);
