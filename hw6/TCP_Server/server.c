@@ -72,8 +72,10 @@ void *handle_client(void *socket_desc) {
         {
         case LOG_IN:
             printf("Command: USER\nUsername: %s\n", requestString);
+            printToCheckFile(accountListGlobal,6);
             handleRequestResult = logIn(requestString, accountListGlobal,NUMBER_OF_LIST,sessionOnline);
             printf("handleRequestResult: %d\n", handleRequestResult);
+            printToCheckFile(accountListGlobal,6);
             sessionOnline = (handleRequestResult == 110) ? TRUE : sessionOnline;
             if (sessionOnline) {
                 strcpy(currentUserName, requestString);
