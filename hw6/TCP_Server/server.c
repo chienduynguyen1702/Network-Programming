@@ -75,30 +75,33 @@ void *handle_client(void *socket_desc)
         // request: 'USER chien' -> lengthOfRequest = 10
 
 
-        printf("Length of message: '%s'\nLength of request: '%d'\n",buffer, lengthOfRequest);
+        // printf("Length of message: '%s'\nLength of request: '%d'\n",buffer, lengthOfRequest);
 
         valread = recv(client_socket, buffer, lengthOfRequest,0);
         if (valread <= 0)
         {
             // Client disconnected or error
+            handleRequestResult = logOut(currentUserName, accountListGlobal, NUMBER_OF_LIST);
+            printToCheckFile(accountListGlobal,6);
+            
             break;
         }
         else
         {
-             printf("===>%d received bytes\n",valread);
+            //  printf("===>%d received bytes\n",valread);
+            printf("====================================\n");
+            printf("Client %d message: '%s'\n",client_socket, buffer);
+            // printf("====================================\n");
         }
         
-        printf("====================================\n");
-        printf("Client %d message: '%s'\n",client_socket, buffer);
-        printf("====================================\n");
         char *token;
         token = strtok(buffer, seperate);
         
-        printf("token : %s\n", token);
+        // printf("token : %s\n", token);
 
-        while (token != NULL)
+        if (token != NULL)
         {
-            printf("====================================\n");
+            // printf("====================================\n");
             // remove endline character
             // buffer[strcspn(buffer, "\n")] = 0;
             // printf("token: '%s'\n", token);
@@ -112,7 +115,7 @@ void *handle_client(void *socket_desc)
             {
             case LOG_IN:
                 // printf("Command: USER\nUsername: %s\n", requestString);
-                printToCheckFile(accountListGlobal,6);
+                // printToCheckFile(accountListGlobal,6);
                 handleRequestResult = logIn(requestString, accountListGlobal, NUMBER_OF_LIST, sessionOnline);
                 printToCheckFile(accountListGlobal,6);
                 // printf("handleRequestResult: %d\n", handleRequestResult);
@@ -162,16 +165,16 @@ void *handle_client(void *socket_desc)
             write(client_socket, buffer, strlen(buffer));
             memset(buffer, 0, sizeof(buffer));
             memset(requestString, 0, sizeof(requestString));
-            printf("\n\n");
+            printf("\n");
             free(token_copy);
 
             token = strtok(NULL, seperate);
             // printf("token after  strtok: %s\n\n",token);
-
+            printf("====================================\n");
         }
         // printf("token after loop: %s\n\n",token);
-        handleRequestResult = logOut(currentUserName, accountListGlobal, NUMBER_OF_LIST);
     }
+    handleRequestResult = logOut(currentUserName, accountListGlobal, NUMBER_OF_LIST);
     // if (valread == 0) {
     //     printf("Client disconnected\n");
     // } else {
