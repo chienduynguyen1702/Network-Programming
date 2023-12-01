@@ -1,0 +1,6 @@
+tungbt 1
+admin 1
+ductq 0
+chien 1
+asd 0
+zxc 1
