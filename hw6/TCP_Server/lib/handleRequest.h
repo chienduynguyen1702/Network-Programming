@@ -84,7 +84,7 @@ int logIn(char *username, account accountList[], int numberOfAccountList, int se
     {
         for (int i = 0; i < numberOfAccountList; i++)
         {
-            printf("|  %-13s|%-15s|  %-13s|\n",accountList[i].accountName,(accountList[i].isActived==ACTIVED)?"  actived":"  banned",(accountList[i].isOnline==TRUE)?"  online":"  offline");
+            // printf("|  %-13s|%-15s|  %-13s|\n",accountList[i].accountName,(accountList[i].isActived==ACTIVED)?"  actived":"  banned",(accountList[i].isOnline==TRUE)?"  online":"  offline");
             if (strcmp(username, accountList[i].accountName) == 0)
             {
                 if (accountList[i].isOnline == TRUE)
@@ -109,7 +109,7 @@ int logIn(char *username, account accountList[], int numberOfAccountList, int se
 
 int postMessage(char *postContent, account accountList[], int numberOfAccountList)
 {
-    printf("Content: '%s' has being posting ...\n ", postContent);
+    printf("Content: '%s' has being posting ...\n", postContent);
     return 120; // post success
 }
 
@@ -120,6 +120,7 @@ int logOut(char *username, account accountList[], int numberOfAccountList)
         if (strcmp(username, accountList[i].accountName) == 0)
         {
             accountList[i].isOnline = FALSE;
+            printf("Account '%s' has being logout ...\n", username);
             return 130; // logout success
         }
     }

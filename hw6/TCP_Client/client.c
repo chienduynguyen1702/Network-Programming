@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
                 printf("\nREQUEST: '%s'\n", buffer);
 
                 int sentBytes = send(sock, buffer, strlen(buffer), 0);
-                printf("===>%d sent bytes\n",sentBytes);
+                // printf("===>%d sent bytes\n",sentBytes);
                 recv(sock, buffer, sizeof(buffer), 0);
                 responseCode=atoi(buffer);
                 break;
@@ -124,6 +124,7 @@ int main(int argc, char *argv[]) {
                 responseCode=atoi(buffer);
                 break;
             default:
+                printf("Invalid choice\n");
                 break;
         }
         memset(messageLength,0,4);
