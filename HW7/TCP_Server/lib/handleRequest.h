@@ -94,7 +94,7 @@ int logIn(char *username, account accountList[], int numberOfAccountList, int se
 
                 if (accountList[i].isActived == ACTIVED)
                 {
-                    accountList[i].isOnline = TRUE;
+                    // accountList[i].isOnline = TRUE;
                     return 110; // login success
                 }
                 if (accountList[i].isActived == BANNED)
@@ -119,7 +119,7 @@ int logOut(char *username, account accountList[], int numberOfAccountList)
     {
         if (strcmp(username, accountList[i].accountName) == 0)
         {
-            accountList[i].isOnline = FALSE;
+            // accountList[i].isOnline = FALSE;
             printf("Account '%s' has being logout ...\n", username);
             return 130; // logout success
         }

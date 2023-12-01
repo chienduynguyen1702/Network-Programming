@@ -19,6 +19,9 @@
 #define NOT_EXIST -1
 #define NUMBER_OF_LIST 30
 
+#define FILE_PATH "./TCP_Server/data/account.txt"
+
+pthread_mutex_t lock;
 
 
 typedef struct ACCOUNT
@@ -51,9 +54,11 @@ void *handle_client(void *socket_desc)
     const char seperate[3] = "\r\n";
 
     // char messageLength[4]={0};
-    int lengthOfMessage = 0;
-    printf("Client connected at session %d. ", client_socket);
+    // int lengthOfMessage = 0;
+    printf("====================================\n");
+    printf("Client connected at session %d.\n", client_socket);
     outputResponse(100);
+    printf("====================================\n\n");
     write(client_socket, successConnectedCode, sizeof(successConnectedCode));
     // char cwd[1024]; // current working directory
     // if (getcwd(cwd, sizeof(cwd)) != NULL) {
@@ -67,9 +72,9 @@ void *handle_client(void *socket_desc)
     {
         memset(buffer,0,strlen(buffer));
 
-        lengthOfMessage = read(client_socket,buffer,sizeof(buffer));
-        
-        int lengthOfRequest = atoi(buffer) + 5; 
+        int lengthOfMessage = read(client_socket,buffer,sizeof(buffer));
+        lengthOfMessage = atoi(buffer);
+        int lengthOfRequest = lengthOfMessage + 5; 
         // example: 'USER chien'
         // message: 'chien' -> lengthOfMessage = 5
         // request: 'USER chien' -> lengthOfRequest = 10
@@ -81,9 +86,16 @@ void *handle_client(void *socket_desc)
         if (valread <= 0)
         {
             // Client disconnected or error
-            handleRequestResult = logOut(currentUserName, accountListGlobal, NUMBER_OF_LIST);
-            printToCheckFile(accountListGlobal,6);
-            
+            // handleRequestResult = logOut(currentUserName, accountListGlobal, NUMBER_OF_LIST);
+            // printToCheckFile(accountListGlobal,6);
+            if(sessionOnline == TRUE){
+                printf("====================================\n");
+                pthread_mutex_lock(&lock);
+                handleRequestResult = logOut(currentUserName, accountListGlobal, NUMBER_OF_LIST);
+                sessionOnline = FALSE;
+                pthread_mutex_unlock(&lock);
+            }
+        
             break;
         }
         else
@@ -93,7 +105,8 @@ void *handle_client(void *socket_desc)
             printf("Client %d message: '%s'\n",client_socket, buffer);
             // printf("====================================\n");
         }
-        
+        pthread_mutex_lock(&lock);
+        sleep(3);
         char *token;
         token = strtok(buffer, seperate);
         
@@ -117,7 +130,7 @@ void *handle_client(void *socket_desc)
                 // printf("Command: USER\nUsername: %s\n", requestString);
                 // printToCheckFile(accountListGlobal,6);
                 handleRequestResult = logIn(requestString, accountListGlobal, NUMBER_OF_LIST, sessionOnline);
-                printToCheckFile(accountListGlobal,6);
+                // printToCheckFile(accountListGlobal,6);
                 // printf("handleRequestResult: %d\n", handleRequestResult);
                 sessionOnline = (handleRequestResult == 110) ? TRUE : sessionOnline;
                 if (sessionOnline)
@@ -151,7 +164,7 @@ void *handle_client(void *socket_desc)
                         memset(currentUserName, 0, sizeof(currentUserName));
                     }
                 }
-                printToCheckFile(accountListGlobal,6);
+                // printToCheckFile(accountListGlobal,6);
                 break;
             default:
                 handleRequestResult = 300;
@@ -165,25 +178,31 @@ void *handle_client(void *socket_desc)
             write(client_socket, buffer, strlen(buffer));
             memset(buffer, 0, sizeof(buffer));
             memset(requestString, 0, sizeof(requestString));
-            printf("\n");
             free(token_copy);
 
             token = strtok(NULL, seperate);
             // printf("token after  strtok: %s\n\n",token);
-            printf("====================================\n");
+            printf("====================================\n\n");
         }
         // printf("token after loop: %s\n\n",token);
+        pthread_mutex_unlock(&lock);
+
     }
-    handleRequestResult = logOut(currentUserName, accountListGlobal, NUMBER_OF_LIST);
-    // if (valread == 0) {
-    //     printf("Client disconnected\n");
-    // } else {
-    //     perror("recv failed");
+    // if (sessionOnline == TRUE)
+    // {
+    //     pthread_mutex_lock(&lock);
+    //     handleRequestResult = logOut(currentUserName, accountListGlobal, NUMBER_OF_LIST);
+    //     sessionOnline = FALSE;
+    //     pthread_mutex_unlock(&lock);
+    //     /* code */
     // }
+    
 
     close(client_socket);
+    printf("====================================\n\n");
     printf("Client disconnected at session %d.\n", client_socket);
     free(socket_desc);
+    printf("====================================\n\n");
     pthread_exit(NULL);
 }
 
@@ -214,6 +233,12 @@ int main(int argc, char *argv[])
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(atoi(argv[1]));
 
+
+    if (pthread_mutex_init(&lock, NULL) != 0)
+    {
+        printf("\n mutex init failed\n");
+        return 1;
+    }
     // Forcefully attaching socket to the port 8080
     if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0)
     {
@@ -228,9 +253,9 @@ int main(int argc, char *argv[])
     }
     printf("Server is running on port %d\n", atoi(argv[1]));
 
-    char *filePath = "./TCP_Server/data/account.txt";
+    char *filePath = FILE_PATH;
     getData(filePath, accountListGlobal);
-
+    
     while (1)
     {
         if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen)) < 0)
@@ -239,16 +264,26 @@ int main(int argc, char *argv[])
             exit(EXIT_FAILURE);
         }
 
-        pthread_t sniffer_thread;
+        pthread_t worker_thread;
         new_sock = malloc(1);
         *new_sock = new_socket;
 
-        if (pthread_create(&sniffer_thread, NULL, handle_client, (void *)new_sock) < 0)
+        if (pthread_create(&worker_thread, NULL, handle_client, (void *)new_sock) < 0) // failed to create thread  
         {
+            char errorThreadCreatation[3] = "500";
             perror("Could not create thread");
+            // snprintf(errorThreadCreatiation, sizeof(errorThreadCreatation), "%d", handleRequestResult);
+            // printf("Client message: '%s'\n", errorThreadCreatiation);
+            write(new_socket, errorThreadCreatation, strlen(errorThreadCreatation));
             exit(EXIT_FAILURE);
         }
+        // if (pthread_join(worker_thread, NULL) < 0)
+        // {
+        //     perror("Could not join thread");
+        //     exit(EXIT_FAILURE);
+        // }
+        
     }
-
+    pthread_mutex_destroy(&lock);
     return 0;
 }

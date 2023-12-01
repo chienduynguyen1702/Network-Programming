@@ -43,7 +43,12 @@ void outputResponse(int responseCode){
             case 300:
                 printf("RESPONSE CODE: %d : UNDEFINED REQUEST\n",responseCode);
                 break;
-            
+            case 400:
+                printf("RESPONSE CODE: %d : UNDEFINED ERROR\n",responseCode);
+                break;
+            case 500:
+                printf("RESPONSE CODE: %d : INTERNAL SERVER ERROR\n",responseCode);
+                break;
             default:
                 break;
         }
